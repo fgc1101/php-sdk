@@ -1,0 +1,19 @@
+{
+    "name": "fgc1101/esign-php-sdk",
+    "require": {
+        "php": "^7.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "Fgc1101\\EsignPhpSdk\\": "src/",
+            "factory\\": "src/factory/"
+        },
+        "files": ["src/Utils/common.php"]
+    },
+    "authors": [
+        {
+            "name": "fanguochao",
+            "email": "544942125@qq.com"
+        }
+    ]
+}

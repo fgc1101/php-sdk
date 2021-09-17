@@ -23,22 +23,40 @@ $idTypePsn="CRED_PSN_CH_IDCARD";//idType参数，证件类型
 $idNumberPsn='142430199410303113';//idNumber参数，证件号
 $mobilePsn='15635419575';//mobile参数，手机号
 
+//------------------------企业账号信息用于创建机构账号接口传入----------------
+$thirdPartyUserIdOrg="91110108576895548B";//thirdPartyUserId参数，用户唯一标识，自定义保持唯一即可
+$nameOrg="北京优思安科技有限公司";//name参数，机构名称
+$idTypeOrg="CRED_ORG_USCC";//idType参数，证件类型
+$idNumberOrg="";//idNumber参数,机构证件号
+
 
 Factory::init($config['host'], $config['project_id'], $config['project_scert']);
 
-$accountId = createAccount($thirdPartyUserIdPsn, $namePsn, $idTypePsn, $idNumberPsn, $mobilePsn);
-var_dump($accountId);die;
-
-function createAccount($thirdPartyUserIdPsn, $namePsn, $idTypePsn, $idNumberPsn, $mobilePsn){
-    $createPsn = Account::createPersonByThirdPartyUserId(
-        $thirdPartyUserIdPsn,
-        $namePsn,
-        $idTypePsn,
-        $idNumberPsn);
-    $createPsn->setMobile($mobilePsn);
-    $createPsnResp = $createPsn->execute();//execute方法发起请求
-    $createPsnJson = json_decode($createPsnResp->getBody());
-    $accountId = $createPsnJson->data->accountId;//生成的个人账号保存好，后续接口调用需要使用
-    return $accountId;
+// 先查询、没有的话应该再创建
+$obj = getResponse(Account::QryPersonByThirdId($thirdPartyUserIdPsn));
+if($obj->code == 0){
+    //成功
+    $accountId = $obj->data->accountId;
+}else{
+    // 失败的情况下就创建个人账号
+    $personalAccountObj = getResponse(Account::createAccount($thirdPartyUserIdPsn, $namePsn, $idTypePsn, $idNumberPsn, $mobilePsn));
+    $accountId = $personalAccountObj->data->accountId;
 }
+
+
+// 企业账号也是先创建，没有的话再创建
+$orgObj = getResponse(Account::qryOrganizationsByThirdId($thirdPartyUserIdOrg));
+
+if($orgObj->code == 0){
+    $orgId = $obj->data->accountId;
+}else{
+    // 创建企业账号
+    $orgAccount = getResponse(Account::createOrganizationsByThirdPartyUserId($thirdPartyUserIdOrg, $accountId, $nameOrg, $idTypeOrg, $idNumberOrg));
+    $orgId = $orgAccount->data->accountId;
+}
+
+
+
+
+
 

@@ -1,8 +1,5 @@
 <?php
 namespace factory;
-//require (__DIR__.'/request/EsignRequest.php');
-//require ('.././emun/HttpEmun.php');
-
 
 /**
  * 基础信息初始化类

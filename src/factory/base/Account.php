@@ -16,6 +16,7 @@ use factory\account\DeleteOrganizationsByThirdId;
 use factory\account\DeletePersonByAccountId;
 use factory\account\DeletePersonByThirdId;
 use factory\account\DeleteSignAuth;
+use factory\account\QryGrantedSeals;
 use factory\account\QryOrganizationsByOrgId;
 use factory\account\QryOrganizationsByThirdId;
 use factory\account\QryPersonByaccountId;
@@ -171,5 +172,14 @@ class Account
      */
     public static function updatePersonAccountByThirdId($thirdPartyUserId){
         return new UpdatePersonAccountByThirdId($thirdPartyUserId);
+    }
+
+    /**
+     * 印章服务API - 查询授权印章列表
+     * @param $orgId
+     * @return QryGrantedSeals
+     */
+    public static function queryGrantedSealsByOrgId($orgId){
+        return new QryGrantedSeals($orgId);
     }
 }

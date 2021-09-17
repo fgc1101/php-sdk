@@ -1,5 +1,6 @@
 {
     "name": "fgc1101/esign-php-sdk",
+    "license": "MIT",
     "require": {
         "php": "^7.2"
     },
